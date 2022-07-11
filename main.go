@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -66,6 +67,7 @@ func main() {
 
 	log.Print("Shutting down...")
 
-	http.Close()
+	http.Shutdown(context.Background())
+
 	wg.Wait()
 }
