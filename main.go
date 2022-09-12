@@ -81,7 +81,7 @@ func main() {
 
 	log.Print("Shutting down...")
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	http.Shutdown(context.Background())
 
