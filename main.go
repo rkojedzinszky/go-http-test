@@ -30,9 +30,23 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
 	mux.HandleFunc("/readyz", func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(200)
+		if _, err := os.Stat("/tmp/not-ready"); err == nil {
+			w.WriteHeader(500)
+		} else {
+			w.WriteHeader(200)
+		}
 	})
+
+	mux.HandleFunc("/livez", func(w http.ResponseWriter, r *http.Request) {
+		if _, err := os.Stat("/tmp/not-alive"); err == nil {
+			w.WriteHeader(500)
+		} else {
+			w.WriteHeader(200)
+		}
+	})
+
 	mux.HandleFunc("/sleep", func(w http.ResponseWriter, r *http.Request) {
 		var sleepSeconds float64
 
