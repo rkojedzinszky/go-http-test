@@ -62,6 +62,11 @@ func main() {
 		w.Write([]byte(fmt.Sprintf("%s: slept %f seconds\n", hostname, sleepSeconds)))
 	})
 
+	mux.HandleFunc("/ip", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(200)
+		w.Write([]byte(r.RemoteAddr))
+	})
+
 	http := &http.Server{
 		Handler: mux,
 	}
