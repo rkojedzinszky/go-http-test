@@ -15,6 +15,10 @@ import (
 	"github.com/namsral/flag"
 )
 
+const (
+	xGoHttpInstance = "X-Go-Http-Instance"
+)
+
 var (
 	address = flag.String("address", ":8080", "Address to listen on")
 )
@@ -30,6 +34,13 @@ func main() {
 	}
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add(xGoHttpInstance, hostname)
+		w.WriteHeader(http.StatusOK)
+
+		_, _ = w.Write([]byte(fmt.Sprintf("Requested URI: %+s", r.URL.String())))
+	})
 
 	mux.HandleFunc("/readyz", func(w http.ResponseWriter, r *http.Request) {
 		if _, err := os.Stat("/tmp/not-ready"); err == nil {
