@@ -20,7 +20,8 @@ const (
 )
 
 var (
-	address = flag.String("address", ":8080", "Address to listen on")
+	address       = flag.String("address", ":8080", "Address to listen on")
+	shutdownDelay = flag.Duration("shutdown-delay", time.Second, "Delay shutdown process by this duration")
 )
 
 func main() {
@@ -94,6 +95,11 @@ func main() {
 	signal.Notify(sigchan, syscall.SIGINT, syscall.SIGTERM)
 
 	<-sigchan
+
+	if *shutdownDelay > 0 {
+		log.Print("Delaying shutdown...")
+		time.Sleep(*shutdownDelay)
+	}
 
 	log.Print("Shutting down...")
 
