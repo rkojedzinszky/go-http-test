@@ -79,6 +79,14 @@ func main() {
 		w.Write([]byte(r.RemoteAddr))
 	})
 
+	mux.HandleFunc("/request", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-type", "text/plain")
+		w.WriteHeader(200)
+
+		w.Write([]byte(fmt.Sprintf("%s %s\r\n", r.Method, r.RequestURI)))
+		r.Header.Write(w)
+	})
+
 	http := &http.Server{
 		Handler: mux,
 	}
